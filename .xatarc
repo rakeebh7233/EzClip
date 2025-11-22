@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Rakeeb-Hossain-s-workspace-6j1mms.us-east-1.xata.sh/db/EzSnap",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
