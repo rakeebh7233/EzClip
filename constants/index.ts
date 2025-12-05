@@ -2,7 +2,7 @@ export const MAX_VIDEO_SIZE = 500 * 1024 * 1024;
 export const MAX_THUMBNAIL_SIZE = 10 * 1024 * 1024;
 
 export const BUNNY = {
-  STORAGE_BASE_URL: "https://sg.storage.bunnycdn.com/ezclip",
+  STORAGE_BASE_URL: "https://storage.bunnycdn.com/ezclip",
   CDN_URL: "https://EzClip.b-cdn.net",
   TRANSCRIPT_URL: "https://vz-eba91aae-b3a.b-cdn.net",
   EMBED_URL: "https://iframe.mediadelivery.net/embed",
