@@ -7,9 +7,10 @@ import { BUNNY } from "@/constants";
 import { db } from "@/drizzle/db";
 import { videos } from "@/drizzle/schema";
 import { revalidatePath } from "next/cache";
+import crypto from "crypto";
 
 const VIDEO_STREAM_BASE_URL = BUNNY.STREAM_BASE_URL;
-const THUMBNAIL_STORAGE_BASE_URL = BUNNY.STORAGE_BASE_URL;
+// const THUMBNAIL_STORAGE_BASE_URL = BUNNY.STORAGE_BASE_URL;
 const THUMBNAIL_CDN_URL = BUNNY.CDN_URL;
 const BUNNY_LIBRARY_ID = getEnv("BUNNY_LIBRARY_ID");
 const ACCESS_KEYS = {
@@ -31,26 +32,41 @@ const revalidatePaths = (paths: string[]) => {
 }
 
 // Server Actions
-export const getVideoUploadUrl = withErrorHandling(async () => {
-    await getSessionUserId();
+// export const getVideoUploadUrl = withErrorHandling(async () => {
+//     await getSessionUserId();
 
-    const videoResponse = await apiFetch<BunnyVideoResponse>(
-        `${VIDEO_STREAM_BASE_URL}/${BUNNY_LIBRARY_ID}/videos`,
-        {
-            method: 'POST',
-            bunnyType: 'stream',
-            body: { title: 'Temporary Title', collectionId: ''}
-        }
-    )
+//     const videoResponse = await apiFetch<BunnyVideoResponse>(
+//         `${VIDEO_STREAM_BASE_URL}/${BUNNY_LIBRARY_ID}/videos`,
+//         {
+//             method: 'POST',
+//             bunnyType: 'stream',
+//             body: { title: 'Temporary Title', collectionId: ''}
+//         }
+//     )
 
-    const uploadUrl = `${VIDEO_STREAM_BASE_URL}/${BUNNY_LIBRARY_ID}/videos/${videoResponse.guid}`;
+//     const uploadUrl = `${VIDEO_STREAM_BASE_URL}/${BUNNY_LIBRARY_ID}/videos/${videoResponse.guid}`;
 
-    return {
-        videoId: videoResponse.guid,
-        uploadUrl,
-        accessKey: ACCESS_KEYS.streamAccessKey
-    }
-});
+//     return {
+//         videoId: videoResponse.guid,
+//         uploadUrl,
+//         accessKey: ACCESS_KEYS.streamAccessKey
+//     }
+// });
+
+export const getVideoId = withErrorHandling(async () => {
+        await getSessionUserId();
+    
+        const videoResponse = await apiFetch<BunnyVideoResponse>(
+            `${VIDEO_STREAM_BASE_URL}/${BUNNY_LIBRARY_ID}/videos`,
+            {
+                method: 'POST',
+                bunnyType: 'stream',
+                body: { title: 'Temporary Title', collectionId: ''}
+            }
+        )
+
+        return { videoId: videoResponse.guid };
+    });
 
 // export const getThumbnailUploadUrl = withErrorHandling(async (videoId: string) => {
 //     const fileName = `${Date.now()}-${videoId}-thumbnail`;

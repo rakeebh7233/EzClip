@@ -9,7 +9,6 @@ export async function POST(req: Request) {
   const file = form.get("file") as File;
   const path = form.get("path") as string;
 
-  console.log(THUMBNAIL_STORAGE_BASE_URL, file, path)
   if (!file || !path) {
     return NextResponse.json({ error: "Missing file or path" }, { status: 400 });
   }

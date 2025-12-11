@@ -2,7 +2,7 @@
 import FileInput from "@/components/FileInput"
 import FormField from "@/components/FormField"
 import { MAX_THUMBNAIL_SIZE, MAX_VIDEO_SIZE } from "@/constants";
-import { getThumbnailUploadInfo, getVideoUploadUrl, saveVideoDetails } from "@/lib/actions/video";
+import { getThumbnailUploadInfo, getVideoId, saveVideoDetails } from "@/lib/actions/video";
 import { useFileInput } from "@/lib/hooks/useFileInput";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
@@ -64,31 +64,37 @@ const Page = () => {
             }
 
             // Get bunny upload url 
-            const {
-                videoId,
-                uploadUrl: videoUploadUrl,
-                accessKey: videoAccessKey
-            } = await getVideoUploadUrl();
+            const { videoId } = await getVideoId();
  
-            if (!videoUploadUrl || !videoAccessKey) throw new Error('Failed to get video upload credentials');
+            // if (!videoId || !uploadUrl) throw new Error('Failed to get video upload credentials');
             
-            // Upload video to bunny
-            await uploadFileToBunny(video.file, videoUploadUrl, videoAccessKey)
+            // // Upload video to bunny
+            // uploadFileToBunny(video.file, uploadUrl);
+
+            const videoForm = new FormData();
+            videoForm.append("file", video.file);
+            videoForm.append("videoId", videoId);
+            const videoRes = await fetch('api/upload-video', {
+                method: 'POST',
+                body: videoForm
+            });
+            if (!videoRes.ok) throw new Error('Video upload failed');
 
             // Get thumbnail info
             const { objectPath, thumbnailCdnUrl } = await getThumbnailUploadInfo(videoId);
 
             // Upload thumbnnail via API route
-            const thumbnailFormData = new FormData();
-            thumbnailFormData.append("file", thumbnail.file);
-            thumbnailFormData.append("path", objectPath);
+            const thumbnailForm = new FormData();
+            thumbnailForm.append("file", thumbnail.file);
+            thumbnailForm.append("path", objectPath);
 
-            await fetch('api/upload-thumbnail', {
+            const thumbRes = await fetch('api/upload-thumbnail', {
                 method: 'POST',
-                body: thumbnailFormData
-            })
+                body: thumbnailForm
+            });
+            if (!thumbRes.ok) throw new Error('Thumbnail upload failed');
 
-            console.log("Upload thumbnail to Bunny was successful")
+            console.log("Upload was successful")
             
             // Upload the thumbnail to bunny
             // const {
