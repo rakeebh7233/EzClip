@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { sql } from "drizzle-orm";
+import { ilike, sql } from "drizzle-orm";
+import { videos } from "@/drizzle/schema";
 // import { videos } from '@/drizzle/schema'
 
 export function cn(...inputs: ClassValue[]) {
@@ -98,17 +99,24 @@ export const withErrorHandling = <T, A extends unknown[]>(
     };
 };
 
-// export const getOrderByClause = (filter?: string) => {
-//     switch (filter) {
-//       case "Most Viewed":
-//         return sql`${videos.views} DESC`;
-//       case "Least Viewed":
-//         return sql`${videos.views} ASC`;
-//       case "Oldest First":
-//         return sql`${videos.createdAt} ASC`;
-//       case "Most Recent":
-//       default:
-//         return sql`${videos.createdAt} DESC`;
-//     }
-//   };
+export const getOrderByClause = (filter?: string) => {
+    switch (filter) {
+      case "Most Viewed":
+        return sql`${videos.views} DESC`;
+      case "Least Viewed":
+        return sql`${videos.views} ASC`;
+      case "Oldest First":
+        return sql`${videos.createdAt} ASC`;
+      case "Most Recent":
+      default:
+        return sql`${videos.createdAt} DESC`;
+    }
+  };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const doesTitleMatch = (videos: any, searchQuery: string) => {
+    return ilike(
+        sql`REPLACE(REPLACE(REPLACE(LOWER(${videos.title}), '-', ''), '.', ''), ' ', '')`,
+        `%${searchQuery.replace(/[-. ]/g, "").toLowerCase()}%`
+    );
+}
