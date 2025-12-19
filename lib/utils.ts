@@ -125,3 +125,16 @@ export const createIframeLink = (videoId: string) => {
     const libraryId = getEnv('BUNNY_LIBRARY_ID')
     return `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}?autoplay=true&preload=true`;
 }
+
+export function daysAgo(inputDate: Date): string {
+    const now = new Date();
+    const diffTime = now.getTime() - inputDate.getTime();
+    const diffDays = Math.floor(diffTime/(1000*60*60*24));
+
+    if (diffDays <=0 )
+        return "Today";
+    else if (diffDays === 1) 
+        return "Yesterday";
+    else
+        return `${diffDays} days ago`;
+}

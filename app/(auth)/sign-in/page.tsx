@@ -6,7 +6,6 @@ import Link from 'next/link'
 
 const Page = () => {
   const handleSignIn = async () => {
-    console.log('here')
     return await authClient.signIn.social({provider: 'google'})
   }
 

@@ -24,7 +24,7 @@ const Navbar = () => {
         {user && (
           <figure>
             <button onClick={() => router.push(`/profile/${user}`)}>
-              <Image src="/assets/images/dummy.jpg" alt='User' width={36} height={36} className='rounded-full aspect-square' />
+              <Image src={user.image || ''} alt='User' width={36} height={36} className='rounded-full aspect-square' />
             </button>
             <button className='cursor-pointer'>
               <Image src="/assets/icons/logout.svg" alt='logout' width={24} height={24} className='rotate-180' />
