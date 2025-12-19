@@ -7,18 +7,18 @@ import { useFileInput } from "@/lib/hooks/useFileInput";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
-const uploadFileToBunny = (file: File, uploadUrl: string, accessKey: string): Promise<void> => {
-    return fetch(uploadUrl, {
-        method: "PUT",
-        headers: {
-            'Content-Type': file.type,
-            AccessKey: accessKey
-        },
-        body: file,
-    }).then((response) => {
-        if (!response.ok) throw new Error('Upload Failed')
-    })
-}
+// const uploadFileToBunny = (file: File, uploadUrl: string, accessKey: string): Promise<void> => {
+//     return fetch(uploadUrl, {
+//         method: "PUT",
+//         headers: {
+//             'Content-Type': file.type,
+//             AccessKey: accessKey
+//         },
+//         body: file,
+//     }).then((response) => {
+//         if (!response.ok) throw new Error('Upload Failed')
+//     })
+// }
 
 const Page = () => {
     const router = useRouter();
@@ -66,7 +66,7 @@ const Page = () => {
             // Get bunny upload url 
             const { videoId } = await getVideoId();
  
-            // if (!videoId || !uploadUrl) throw new Error('Failed to get video upload credentials');
+            if (!videoId) throw new Error('Failed to get video upload credentials');
             
             // // Upload video to bunny
             // uploadFileToBunny(video.file, uploadUrl);
@@ -117,7 +117,7 @@ const Page = () => {
             })
             console.log("saveVideo was successful")
 
-            router.push(`/video/${videoId }`)
+            router.push(`/video/${videoId}`)
 
         } catch (error) {
             console.log("Error submitting form: ", error);

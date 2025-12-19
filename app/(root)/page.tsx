@@ -22,7 +22,6 @@ const Page = async ({ searchParams }: SearchParams) => {
         (
           <section className='video-grid'>
             {videos.map(({ video, user }) => {
-              console.log(videos[0].video.thumbnailUrl)
               return (
                 <VideoCard
                   key={video.id}

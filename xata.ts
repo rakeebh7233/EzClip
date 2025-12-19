@@ -19,11 +19,15 @@ export class XataClient extends DatabaseClient<DatabaseSchema> {
   }
 }
 
-let instance: XataClient | undefined = undefined;
+declare global {
+  // eslint-disable-next-line no-var
+  var xata: XataClient | undefined;
+}
 
 export const getXataClient = () => {
-  if (instance) return instance;
+  if (!globalThis.xata) {
+    globalThis.xata = new XataClient();
+  }
 
-  instance = new XataClient();
-  return instance;
+  return globalThis.xata;
 };

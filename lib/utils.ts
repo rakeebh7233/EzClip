@@ -120,3 +120,8 @@ export const doesTitleMatch = (videos: any, searchQuery: string) => {
         `%${searchQuery.replace(/[-. ]/g, "").toLowerCase()}%`
     );
 }
+
+export const createIframeLink = (videoId: string) => {
+    const libraryId = getEnv('BUNNY_LIBRARY_ID')
+    return `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}?autoplay=true&preload=true`;
+}
