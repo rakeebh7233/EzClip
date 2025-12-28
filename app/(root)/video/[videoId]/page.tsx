@@ -6,7 +6,13 @@ import { redirect } from "next/navigation";
 const Page = async ({ params }: Params) => {
     const { videoId } = await params;
 
-    const { user, video } = await getVideoById(videoId);
+    const result = await getVideoById(videoId);
+    console.log("Video Detail Result:", result);
+
+    if (!result) {
+        return "Loading...";
+    }
+    const { user, video } = result;
 
     if (!video) redirect('/404');
 

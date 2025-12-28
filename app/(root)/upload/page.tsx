@@ -7,19 +7,6 @@ import { useFileInput } from "@/lib/hooks/useFileInput";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
-// const uploadFileToBunny = (file: File, uploadUrl: string, accessKey: string): Promise<void> => {
-//     return fetch(uploadUrl, {
-//         method: "PUT",
-//         headers: {
-//             'Content-Type': file.type,
-//             AccessKey: accessKey
-//         },
-//         body: file,
-//     }).then((response) => {
-//         if (!response.ok) throw new Error('Upload Failed')
-//     })
-// }
-
 const Page = () => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,11 +52,8 @@ const Page = () => {
 
             // Get bunny upload url 
             const { videoId } = await getVideoId();
- 
+
             if (!videoId) throw new Error('Failed to get video upload credentials');
-            
-            // // Upload video to bunny
-            // uploadFileToBunny(video.file, uploadUrl);
 
             const videoForm = new FormData();
             videoForm.append("file", video.file);
@@ -95,20 +79,9 @@ const Page = () => {
             if (!thumbRes.ok) throw new Error('Thumbnail upload failed');
 
             console.log("Upload was successful")
-            
-            // Upload the thumbnail to bunny
-            // const {
-            //     uploadUrl: thumbnailUploadUrl,
-            //     cdnUrl: thumbnailCdnUrl,
-            //     accessKey: thumbnailAccessKey,
-            // } = await getThumbnailUploadUrl(videoId);
-            // if (!thumbnailUploadUrl || !thumbnailAccessKey || !thumbnailCdnUrl ) throw new Error('Failed to get thumbnail upload credentials');
-
-
-            // await uploadFileToBunny(thumbnail.file, thumbnailUploadUrl, thumbnailAccessKey);
 
             // Create a new DB entry for the video details
-            await saveVideoDetails({
+            const { savedVideoId } = await saveVideoDetails({
                 videoId,
                 thumbnailUrl: thumbnailCdnUrl,
                 ...formData,
@@ -117,7 +90,7 @@ const Page = () => {
             })
             console.log("saveVideo was successful")
 
-            router.push(`/video/${videoId}`)
+            router.push(`/video/${savedVideoId}`)
 
         } catch (error) {
             console.log("Error submitting form: ", error);
