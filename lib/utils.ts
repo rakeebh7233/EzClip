@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { ilike, sql } from "drizzle-orm";
 import { videos } from "@/drizzle/schema";
+import { DEFAULT_RECORDING_CONFIG, DEFAULT_VIDEO_CONFIG } from "@/constants";
 // import { videos } from '@/drizzle/schema'
 
 export function cn(...inputs: ClassValue[]) {
@@ -101,17 +102,17 @@ export const withErrorHandling = <T, A extends unknown[]>(
 
 export const getOrderByClause = (filter?: string) => {
     switch (filter) {
-      case "Most Viewed":
-        return sql`${videos.views} DESC`;
-      case "Least Viewed":
-        return sql`${videos.views} ASC`;
-      case "Oldest First":
-        return sql`${videos.createdAt} ASC`;
-      case "Most Recent":
-      default:
-        return sql`${videos.createdAt} DESC`;
+        case "Most Viewed":
+            return sql`${videos.views} DESC`;
+        case "Least Viewed":
+            return sql`${videos.views} ASC`;
+        case "Oldest First":
+            return sql`${videos.createdAt} ASC`;
+        case "Most Recent":
+        default:
+            return sql`${videos.createdAt} DESC`;
     }
-  };
+};
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const doesTitleMatch = (videos: any, searchQuery: string) => {
@@ -119,22 +120,75 @@ export const doesTitleMatch = (videos: any, searchQuery: string) => {
         sql`REPLACE(REPLACE(REPLACE(LOWER(${videos.title}), '-', ''), '.', ''), ' ', '')`,
         `%${searchQuery.replace(/[-. ]/g, "").toLowerCase()}%`
     );
-}
+};
 
 export const createIframeLink = (videoId: string) => {
     const libraryId = getEnv('BUNNY_LIBRARY_ID')
     return `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}?autoplay=true&preload=true`;
-}
+};
 
 export function daysAgo(inputDate: Date): string {
     const now = new Date();
     const diffTime = now.getTime() - inputDate.getTime();
-    const diffDays = Math.floor(diffTime/(1000*60*60*24));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays <=0 )
+    if (diffDays <= 0)
         return "Today";
-    else if (diffDays === 1) 
+    else if (diffDays === 1)
         return "Yesterday";
     else
         return `${diffDays} days ago`;
+};
+
+export const getMediaStreams = async (
+    withMic: boolean
+): Promise<MediaStreams> => {
+    const displayStream = await navigator.mediaDevices.getDisplayMedia({
+        video: DEFAULT_VIDEO_CONFIG,
+        audio: true
+    });
+
+    const hasDisplayAudio = displayStream.getAudioTracks().length > 0;
+    let micStream: MediaStream | null = null;
+
+    if (withMic) {
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        micStream
+            .getAudioTracks()
+            .forEach((track: MediaStreamTrack) => (track.enabled = true));
+    }
+
+    return { displayStream, micStream, hasDisplayAudio };
+};
+
+export const createAudioMixer = (
+    ctx: AudioContext,
+    displayStream: MediaStream,
+    micStream: MediaStream | null,
+    hasDisplayAudio: boolean
+) => {
+    if (!hasDisplayAudio && !micStream) return null;
+
+    const destination = ctx.createMediaStreamDestination();
+    const mix = (stream: MediaStream, gainValue: number) => {
+        const source = ctx.createMediaStreamSource(stream);
+        const gain = ctx.createGain();
+        gain.gain.value = gainValue;
+        source.connect(gain).connect(destination);
+    };
+
+    if (hasDisplayAudio) mix(displayStream, 0.7);
+    if (micStream) mix(micStream, 1.5);
+
+    return destination;
+};
+
+export const setupRecording = (
+    stream: MediaStream,
+    handlers: RecordingHandlers
+): MediaRecorder => {
+    const recorder = new MediaRecorder(stream, DEFAULT_RECORDING_CONFIG);
+    recorder.ondataavailable = handlers.onDataAvailable;
+    recorder.onstop = handlers.onStop;
+    return recorder;
 }
