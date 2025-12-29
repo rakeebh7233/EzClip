@@ -191,4 +191,30 @@ export const setupRecording = (
     recorder.ondataavailable = handlers.onDataAvailable;
     recorder.onstop = handlers.onStop;
     return recorder;
-}
+};
+
+export const cleanupRecording = (
+    recorder: MediaRecorder | null,
+    stream: MediaStream | null,
+    originalStreams: MediaStream[] = []
+) => {
+    if (recorder?.state !== "inactive") {
+        recorder?.stop();
+    }
+
+    stream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+    originalStreams.forEach((s) => {
+        s.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+    });
+};
+
+export const createRecordingBlob = (
+    chunks: Blob[]
+): {blob: Blob; url: string} => {
+    const blob = new Blob(chunks, { type: "video/webm"});
+    const url = URL.createObjectURL(blob);
+    return { blob, url };
+};
+
+export const calculateRecordingDuration = (startTime: number | null): number => 
+    startTime ? Math.round((Date.now() - startTime) / 1000) : 0;

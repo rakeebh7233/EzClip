@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { createAudioMixer, getMediaStreams, setupRecording } from "../utils";
+import { calculateRecordingDuration, cleanupRecording, createAudioMixer, createRecordingBlob, getMediaStreams, setupRecording } from "../utils";
 
 export const useScreenRecording = () => {
     const [state, setState] = useState<BunnyRecordingState>({
@@ -15,9 +15,26 @@ export const useScreenRecording = () => {
     const audioContextRef = useRef<AudioContext | null>(null);
     const startTimeRef = useRef<number | null>(null);
 
+    useEffect(() => {
+        return () => {
+            stopRecording();
+            if (state.recordedVideoUrl) URL.revokeObjectURL(state.recordedVideoUrl);
+            audioContextRef.current?.close().catch(console.error);
+        };
+    }, [state.recordedVideoUrl]);
+
     const handleRecordingStop = () => {
-        // const { blob, url }
-    }
+        const { blob, url } = createRecordingBlob(chunksRef.current);
+        const duration = calculateRecordingDuration(startTimeRef.current);
+
+        setState((prev) => ({
+            ...prev,
+            recordedBlob: blob,
+            recordedVideoUrl: url,
+            recordingDuration: duration,
+            isRecording: false
+        }));
+    };
 
     const startRecording = async (withMic = true) => {
         try {
@@ -64,7 +81,32 @@ export const useScreenRecording = () => {
         }
     };
 
-    const stopRecording = () => { }
+    const stopRecording = () => { 
+        cleanupRecording(
+            mediaRecorderRef.current,
+            streamRef.current,
+            streamRef.current?._originalStreams
+        );
+        streamRef.current = null;
+        setState((prev) => ({...prev, isRecording: false}));
+    }
 
-    const resetRecording = () => { }
+    const resetRecording = () => {
+        stopRecording();
+        if (state.recordedVideoUrl) URL.revokeObjectURL(state.recordedVideoUrl);
+        setState({
+            isRecording: false,
+            recordedBlob: null,
+            recordedVideoUrl: "",
+            recordingDuration: 0
+        });
+        startTimeRef.current = null;
+    }
+
+    return {
+        ...state,
+        startRecording,
+        stopRecording,
+        resetRecording
+    }
 }
