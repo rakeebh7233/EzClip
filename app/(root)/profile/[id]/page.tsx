@@ -1,19 +1,39 @@
+import EmptyState from "@/components/EmptyState";
 import Header from "@/components/Header";
 import VideoCard from "@/components/VideoCard";
 import { dummyCards } from "@/constants";
+import { getAllVideosByUser } from "@/lib/actions/video";
+import { redirect } from "next/navigation";
 
-const Page = async ({params}: ParamsWithSearch) => {
-    const {id} = await params;
-    
+const Page = async ({ params, searchParams }: ParamsWithSearch) => {
+    const { id } = await params;
+    const { query, filter } = await searchParams;
+
+    const { user, videos } = await getAllVideosByUser(id, query, filter);
+
+    if (!user) redirect('/404')
     return (
         <div className="wrapper page">
-            <Header subHeader="rakeeb@gmail.com" title="Rakeeb | Personal Project" userImg="/assets/images/dummy.jpg" />
+            <Header subHeader={user?.email} title={user?.name} userImg={user?.image ?? ''} />
 
-            <section className="video-grid">
-                {dummyCards.map((card) => (
-                    <VideoCard key={card.id} {...card} />
-                ))}
-            </section>
+            {videos?.length > 0 ?
+                (
+                    <section className='video-grid'>
+                        {videos.map(({ video, user }) => {
+                            return (
+                                <VideoCard
+                                    key={video.id}
+                                    {...video}
+                                    thumbnail={video.thumbnailUrl}
+                                    userImg={user?.image || ''}
+                                    username={user?.name || 'Guest '} />
+                            )
+                        })}
+                    </section>
+                ) : (
+                    <EmptyState icon="/assets/icons/video.svg" title="No Videos Available yet" description="Videos will show up once you upload them." />
+                )
+            }
 
         </div>
     )
