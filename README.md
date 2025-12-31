@@ -14,54 +14,36 @@ EzClip is a **production-ready Next.js application**. It enables users to **reco
 ## 🔗 Demo
 [🔗 Vercel Demo Link](https://ez-clip.vercel.app/)
 
-<!-- ### Login Page
-<img src="public\screenshots\Login_Page.png" alt="Home" width="400"/>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="public/screenshots/Login_Page.png" width="400" height="250"/><br/>
+      <strong>Login Page</strong>
+    </td>
+    <td align="center">
+      <img src="public/screenshots/Home_Page.png" width="400" height="250"/><br/>
+      <strong>Home Page</strong>
+    </td>
+  </tr>
 
-### Home Page <br />
-<img src="public\screenshots\Home_Page.png" alt="Home" width="400"/>
+  <tr>
+    <td align="center">
+      <img src="public/screenshots/Video_Details_Page.png" width="400" height="275"/><br/>
+      <strong>Video Details Page</strong>
+    </td>
+    <td align="center">
+      <img src="public/screenshots/Upload_Video_Page.png" width="400" height="275" /><br/>
+      <strong>Upload Video Page</strong>
+    </td>
+  </tr>
 
-### Video Details Page
-<img src="public\screenshots\Video_Details_Page.png" alt="Home" width="400"/>
-
-### Upload Video Page
-<img src="public\screenshots\Upload_Video_Page.png" alt="Home" width="400"/>
-
-### Screen Record UI
-<img src="public\screenshots\Screen_Recording_UI.png" alt="Home" width="400"/> -->
-<div style="display: flex; gap: 24px; flex-wrap: wrap; text-align: center;">
-
-  <div>
-    <img src="public/screenshots/Login_Page.png" width="375" height="225" />
-    <p><strong>Login Page</strong></p>
-  </div>
-
-  <div>
-    <img src="public/screenshots/Home_Page.png" width="375" height="225"/>
-    <p><strong>Home Page</strong></p>
-  </div>
-
-  <div>
-    <img src="public/screenshots/Video_Details_Page.png" width="375" height="225" />
-    <p><strong>Video Details Page</strong></p>
-  </div>
-
-</div>
-
-<br/>
-
-<div style="display: flex; gap: 24px; flex-wrap: wrap; text-align: center;">
-
-  <div>
-    <img src="public/screenshots/Upload_Video_Page.png" width="375" height="225" />
-    <p><strong>Upload Video Page</strong></p>
-  </div>
-
-  <div>
-    <img src="public/screenshots/Screen_Recording_UI.png" width="375" height="225" />
-    <p><strong>Screen Record UI</strong></p>
-  </div>
-
-</div>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="public/screenshots/Screen_Recording_UI.png" width="350" height="225"/><br/>
+      <strong>Screen Record UI</strong>
+    </td>
+  </tr>
+</table>
 
 ## ✨ Features
 
