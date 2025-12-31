@@ -49,6 +49,7 @@ EzClip is a **production-ready Next.js application**. It enables users to **reco
 
 * 🎥 **In-browser screen & video recording**
 * ☁️ **Scalable video storage & delivery** using Bunny.net
+* 🧠 **AI-generated video transcripts, title and dscription** powered by Bunny.net
 * 🔐 **Secure authentication** with better-auth
 * 🛡️ **Application-level protection** via Arcjet
 * 🗄️ **Type-safe database access** using Drizzle ORM with Xata
@@ -175,8 +176,6 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 These values are consumed by **better-auth** during provider initialization.
 
-This integration highlights my experience with secure third‑party OAuth flows in production systems.
-
 ---
 
 ## 🛡️ Security
@@ -300,17 +299,10 @@ Make sure to:
 
 ## 🛠️ Future Improvements
 
-* Public clip sharing pages
-* Team workspaces
 * Video analytics
 * Comments & reactions
 * Folder-based organization
-
----
-
-## 📄 License
-
-MIT License
+* AWS Based Backend
 
 ---
 
