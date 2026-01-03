@@ -49,7 +49,7 @@ EzClip is a **production-ready Next.js application**. It enables users to **reco
 
 * 🎥 **In-browser screen & video recording**
 * ☁️ **Scalable video storage & delivery** using Bunny.net
-* 🧠 **AI-generated video transcripts, title and dscription** powered by Bunny.net
+* 🧠 **AI-generated video transcripts, title and description** powered by Bunny.net
 * 🔐 **Secure authentication** with better-auth
 * 🛡️ **Application-level protection** via Arcjet
 * 🗄️ **Type-safe database access** using Drizzle ORM with Xata
